@@ -28,6 +28,7 @@ export interface TimelineHoursProps {
   numberOfDays: number;
   timelineLeftInset?: number;
   testID?: string;
+  hourBlockHeight?: number;
 }
 
 const dimensionWidth = constants.screenWidth;
@@ -47,12 +48,13 @@ const TimelineHours = (props: TimelineHoursProps) => {
     width,
     numberOfDays = 1,
     timelineLeftInset = 0,
-    testID
+    testID,
+    hourBlockHeight = HOUR_BLOCK_HEIGHT
   } = props;
 
   const lastLongPressEventTime = useRef<NewEventTime>();
   // const offset = this.calendarHeight / (end - start);
-  const offset = HOUR_BLOCK_HEIGHT;
+  const offset = hourBlockHeight;
   const unavailableHoursBlocks = buildUnavailableHoursBlocks(unavailableHours, {dayStart: start, dayEnd: end});
 
   const hours = useMemo(() => {
@@ -78,7 +80,7 @@ const TimelineHours = (props: TimelineHoursProps) => {
     event => {
       const yPosition = event.nativeEvent.locationY;
       const xPosition = event.nativeEvent.locationX;
-      const {hour, minutes} = calcTimeByPosition(yPosition, HOUR_BLOCK_HEIGHT);
+      const {hour, minutes} = calcTimeByPosition(yPosition, hourBlockHeight);
       const dateByPosition = calcDateByPosition(xPosition, timelineLeftInset, numberOfDays, date);
       lastLongPressEventTime.current = {hour, minutes, date: dateByPosition};
 

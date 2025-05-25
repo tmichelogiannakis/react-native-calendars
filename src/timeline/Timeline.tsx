@@ -115,6 +115,7 @@ export interface TimelineProps {
   timelineLeftInset?: number;
   /** Identifier for testing */
   testID?: string;
+  hourBlockHeight?: number;
 }
 
 const Timeline = (props: TimelineProps) => {
@@ -142,7 +143,8 @@ const Timeline = (props: TimelineProps) => {
     eventTapped,
     numberOfDays = 1,
     timelineLeftInset = 0,
-    testID
+    testID,
+    hourBlockHeight
   } = props;
 
   const pageDates = useMemo(() => {
@@ -226,7 +228,10 @@ const Timeline = (props: TimelineProps) => {
     });
 
     return (
-      <View pointerEvents={'box-none'}  style={[{marginLeft: dayIndex === 0 ? timelineLeftInset : undefined}, styles.current.eventsContainer]}>
+      <View
+        pointerEvents={'box-none'}
+        style={[{marginLeft: dayIndex === 0 ? timelineLeftInset : undefined}, styles.current.eventsContainer]}
+      >
         {events}
       </View>
     );
@@ -234,11 +239,13 @@ const Timeline = (props: TimelineProps) => {
 
   const renderTimelineDay = (dayIndex: number) => {
     const indexOfToday = pageDates.indexOf(generateDay(new Date().toString()));
-    const left = timelineLeftInset + indexOfToday * width / numberOfDays;
+    const left = timelineLeftInset + (indexOfToday * width) / numberOfDays;
     return (
       <React.Fragment key={dayIndex}>
         {renderEvents(dayIndex)}
-        {indexOfToday !== -1 && showNowIndicator && <NowIndicator width={width / numberOfDays} left={left} styles={styles.current}/>}
+        {indexOfToday !== -1 && showNowIndicator && (
+          <NowIndicator width={width / numberOfDays} left={left} styles={styles.current} />
+        )}
       </React.Fragment>
     );
   };
@@ -267,6 +274,7 @@ const Timeline = (props: TimelineProps) => {
         numberOfDays={numberOfDays}
         timelineLeftInset={timelineLeftInset}
         testID={`${testID}.hours`}
+        hourBlockHeight={hourBlockHeight}
       />
       {times(numberOfDays, renderTimelineDay)}
     </ScrollView>
